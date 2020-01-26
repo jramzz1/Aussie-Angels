@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Aussie Angels</title>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css"> -->
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+  </head>
+
+  <body class="text-center">
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner">
+          <h3 class="masthead-brand">Aussie Angels</h3>
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="/">Home</a>
+            <a class="nav-link" href="/about-us">About</a>
+          </nav>
+        </div>
+      </header>
+
+      <main role="main" class="inner-cover">
+        <!--Section: Contact v.2-->
+        <section class="section">
+
+    <!--Section heading-->
+    <!-- <h2 class="section-heading h1 pt-4 mb-5">Contact us</h2> -->
+  
+            <div class="card bg-dark">
+                <div class="card-body">
+
+                    <!--Google map-->                  
+                    <div id="map-container-google-12" class="z-depth-1-half map-container-7" style="height: 200px">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d27471.175071814672!2d-96.35014285!3d30.608671600000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1580021500279!5m2!1sen!2sus" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+                    </div>
+
+                    <div class="container">
+                        <!-- <h3>Shipping Address</h3>
+                        <p>You can click the button below to use your current location as your shipping address</p> -->
+                        <div id="map"></div>
+                        <!-- <form action="/new-map" method="GET"> -->
+                            <button id="showMe" class="btn btn-primary">Get My Location</button>
+                            <script>
+                                //This div will be used to show Google map
+                                const mapArea = document.getElementById('map');
+
+                                const $ = id => document.getElementById(id);
+
+                                const actionBtn = document.getElementById('showMe');
+                                const locationsAvailable = document.getElementById('locationList');
+                                let Gmap, Gmarker;
+
+                                const __KEY = "AIzaSyA27mrPZ2DyWoe3gqznyYWjsXfmqRTnnXY";
+
+                                actionBtn.addEventListener('click', e => {
+
+                                  // hide the button 
+                                  // actionBtn.style.display = "none";
+
+                                  // call Materialize toast to update user 
+                                  // M.toast({ html: 'I am fetching your current location', classes: 'rounded' });
+
+                                  // get the user's position
+                                  getLocation();
+
+                                });
+
+                                getLocation = () => {
+                                  if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(displayLocation, showError, options)
+
+                                  }
+                                  else {
+                                    M.toast({ html: 'Sorry, your browser does not support this feature... Please Update your Browser to enjoy it', classes: 'rounded' });
+                                  }
+                                }
+
+                                // displayLocation
+                                displayLocation = (position) => {
+                                  const lat = position.coords.latitude;
+                                  const lng = position.coords.longitude;
+
+                                  const latlng = { lat, lng }
+
+                                  var elem = document.getElementById("map-container-google-12");
+                                  elem.parentElement.removeChild(elem);
+
+                                  showMap(latlng, lat, lng);
+                                  createMarker(latlng);
+                                  mapArea.style.display = "block";
+                                  getGeolocation(lat, lng);
+                                  // console.log(getGeolocation(lat, lng));
+                                  alert("Your longitude: " + lng + ", and latitude: " + lat + " will be used.");
+
+                                  // var label = document.createElement("label");
+                                  // label.classList.add("coordinates-label");
+                                  // label.innerHTML = lat;
+                                  // document.body.appendChild(label);
+
+                                  // var label = document.createElement("label");
+                                  // label.classList.add("coordinates-label2");
+                                  // label.innerHTML = lng;
+                                  // document.body.appendChild(label); 
+
+                                }
+
+                                // Recreates the map
+                                showMap = (latlng, lat, lng) => {
+                                  let mapOptions = {
+                                    center: latlng,
+                                    zoom: 15
+                                  };
+
+                                  Gmap = new google.maps.Map(mapArea, mapOptions);
+
+                                  Gmap.addListener('drag', function () {
+                                    Gmarker.setPosition(this.getCenter()); // set marker position to map center
+                                  });
+
+                                  Gmap.addListener('dragend', function () {
+                                    Gmarker.setPosition(this.getCenter()); // set marker position to map center
+                                  });
+
+                                  Gmap.addListener('idle', function () {
+
+                                    Gmarker.setPosition(this.getCenter()); // set marker position to map center
+
+                                    if (Gmarker.getPosition().lat() !== lat || Gmarker.getPosition().lng() !== lng) {
+                                      setTimeout(() => {
+                                        // console.log("I have to get new geocode here!")
+                                        updatePosition(this.getCenter().lat(), this.getCenter().lng()); // update position display
+                                      }, 2000);
+                                    }
+                                  });
+
+                                }
+
+                                // Creates marker on the screen
+                                createMarker = (latlng) => {
+                                  let markerOptions = {
+                                    position: latlng,
+                                    map: Gmap,
+                                    animation: google.maps.Animation.BOUNCE,
+                                    clickable: true,
+                                    draggable: true,
+                                  };
+                                  Gmarker = new google.maps.Marker(markerOptions);
+
+                                }
+
+                                // updatePosition on 
+                                updatePosition = (lat, lng) => {
+
+                                  getGeolocation(lat, lng);
+                                }
+
+                                // Displays the different error messages
+                                showError = (error) => {
+                                  mapArea.style.display = "block"
+                                  switch (error.code) {
+                                    case error.PERMISSION_DENIED:
+                                      mapArea.innerHTML = "You denied the request for your location."
+                                      break;
+                                    case error.POSITION_UNAVAILABLE:
+                                      mapArea.innerHTML = "Your Location information is unavailable."
+                                      break;
+                                    case error.TIMEOUT:
+                                      mapArea.innerHTML = "Your request timed out. Please try again"
+                                      break;
+                                    case error.UNKNOWN_ERROR:
+                                      mapArea.innerHTML = "An unknown error occurred please try again after some time."
+                                      break;
+                                  }
+                                }
+
+                                const options = {
+                                  enableHighAccuracy: true
+                                }
+
+                                getGeolocation = (lat, lng) => {
+
+                                  const latlng = lat + "," + lng;
+
+                                  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng}&key=${__KEY}`)
+
+                                    .then(res => res.json())
+                                    .then(data => populateCard(data.results));
+
+                                }
+
+                                function removeAddressCards() {
+                                  if (locationsAvailable.hasChildNodes()) {
+                                    while (locationsAvailable.firstChild) {
+                                      locationsAvailable.removeChild(locationsAvailable.firstChild);
+                                    }
+                                  }
+                                }
+
+                                populateCard = (geoResults) => {
+                                  // console.log(geoResults);
+                                  // check if a the container has a child node to force re-render of dom
+                                  // removeAddressCards();
+
+                                  geoResults.map(geoResult => {
+
+                                    // first create the input div container
+                                    const addressCard = document.createElement('div');
+
+                                    // then create the input and label elements
+                                    const input = document.createElement('input');
+                                    const label = document.createElement('label');
+
+                                    // then add materialize classes to the div and input
+                                    addressCard.classList.add("card");
+                                    input.classList.add("with-gap");
+
+                                    // add attributes to them
+                                    label.setAttribute("for", geoResult.place_id);
+                                    label.innerHTML = geoResult.formatted_address;
+
+                                    input.setAttribute("name", "address");
+                                    input.setAttribute("type", "radio");
+                                    input.setAttribute("value", geoResult.formatted_address);
+                                    input.setAttribute("id", geoResult.place_id);
+                                    // input.addEventListener('click', e => console.log(123));
+                                    input.addEventListener('click', () => inputClicked(geoResult));
+                                    // finalResult = input.value;
+                                    finalResult = geoResult.formatted_address;
+
+
+                                    addressCard.appendChild(input);
+                                    addressCard.appendChild(label);
+
+                                    // console.log(geoResult.formatted_address)
+
+                                    return (
+                                      locationsAvailable.appendChild(addressCard)
+                                    );
+                                  })
+                                }
+
+                                inputClicked = (result) => {
+
+                                  result.address_components.map(component => {
+                                    const types = component.types
+
+                                    if (types.includes('postal_code')) {
+                                      $('postal_code').value = component.long_name
+                                    }
+
+                                    if (types.includes('locality')) {
+                                      $('locality').value = component.long_name
+                                    }
+
+                                    if (types.includes('administrative_area_level_2')) {
+                                      $('city').value = component.long_name
+                                    }
+
+                                    if (types.includes('administrative_area_level_1')) {
+                                      $('state').value = component.long_name
+                                    }
+
+                                    if (types.includes('point_of_interest')) {
+                                      $('landmark').value = component.long_name
+                                    }
+                                  });
+
+                                  $('address').value = result.formatted_address;
+
+                                  // to avoid labels overlapping prefilled contents
+                                  M.updateTextFields();
+                                  removeAddressCards();
+                                }
+                            </script>
+                        <!-- </form> -->
+                    </div>
+
+                  <form action="/" method="POST">
+                    <div class="row" id="inputs">
+                        <!--Grid column-->
+                        <div class="col-md-6 mb-4">
+                            <p>Your Information:</p>
+                            <div class="container">
+                                <p>
+                                    <input type="name" name="name" class="form-control" id="exampleInputName1" aria-describedby="nameHelp" placeholder="First and Last Name">
+                                </p>
+  
+                                <p>
+                                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+                                </p>
+  
+                                <p>
+                                    <input type="phone" name="phone" class="form-control" id="exampleInputPhone1" aria-describedby="phoneHelp" placeholder="Phone">
+                                </p>
+                            </div>
+                        </div>
+                        <!--Grid column-->
+                      
+                        <!--Grid column-->
+                        <div class="col-md-6 mb-4">
+                            <p>Animal Information:</p>
+                            <div class="container">
+                                <p>
+                                    <input type="species" name="species" class="form-control" id="exampleInputSpecies1" aria-describedby="speciesHelp" placeholder="Animal Species">
+                                </p>
+
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="inputGroupSelect01" name="rescue-state">
+                                    <option selected>Is the Animal Contained?</option>
+                                    <option value="1">Yes</option>
+                                    <option value="2">No</option>
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <select class="custom-select" id="inputGroupSelect01" name="scared-state">
+                                    <option selected>State of Animal when Spotted?</option>
+                                    <option value="1">Wounded/Panicked</option>
+                                    <option value="2">Panicked/Running away from harm.</option>
+                                    <option value="3">Safe but at rist for harm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+<!--                           <input type="text" name="lat">
+                          <script type="text/javascript">
+                            var a = document.getElementById("lat");
+
+                            function myFunction() {
+                                a.setAttribute('value', lat);
+                            }
+                          </script>
+
+                          <input type="text" name="lng">
+                          <script type="text/javascript">
+                            function myFunction2() {
+                                var b = document.getElementById("lng");
+                                b.value = document.getElementById(lng);
+                            }
+                          </script> -->
+
+                        <div class="move-button">
+                          <button class="btn btn-primary" id="submit" type="submit">Submit</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--Section: Contact v.2-->
+      </main>
+
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <!-- <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p> -->
+        </div>
+      </footer>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="app/assets/javascripts/main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA27mrPZ2DyWoe3gqznyYWjsXfmqRTnnXY"></script>
+  </body>
+</html>
