@@ -1,7 +1,7 @@
 # Aussie-Angels
 Let's look out for the animals.
 
-![About](https://imgur.com/B6j7vjp)
+![About](https://raw.githubusercontent.com/jramzz1/Aussie-Angels/master/About.png)
 ![Home-Page](https://imgur.com/R9vstm7)
 
 #### About
