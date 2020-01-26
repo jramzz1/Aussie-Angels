@@ -6,7 +6,7 @@ Let's look out for the animals.
 
 #### About
 Website where users can pinpoint a location where an animal in distress needs assistance. 
-Geolocation is used to get your current location. Form is then signe electronically with info of
+Geolocation is used to get your current location. Form is then signed electronically with info of
 user and animal and *sent to the database.
 
 Website is code in Ruby and some Javascript for the back-end, Front-End was created using HTML/CSS and
