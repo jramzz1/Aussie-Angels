@@ -2,7 +2,7 @@
 Let's look out for the animals.
 
 ![About](https://raw.githubusercontent.com/jramzz1/Aussie-Angels/master/About.png)
-![Home-Page](https://imgur.com/R9vstm7)
+![Home-Page](https://raw.githubusercontent.com/jramzz1/Aussie-Angels/master/Home.png)
 
 #### About
 Website where users can pinpoint a location where an animal in distress needs assistance. 
